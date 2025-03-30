@@ -1,4 +1,5 @@
 import { NotionEditor } from "@/components/notion-editor";
+import { NotionTest } from "@/components/notion-test";
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
           <p className="text-muted-foreground">Transform your Notion pages into Qiita articles seamlessly.</p>
         </div>
         <NotionEditor />
+        <NotionTest />
       </div>
     </main>
   );
