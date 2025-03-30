@@ -4,8 +4,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
 
+interface TestResult {
+  success: boolean;
+  message: string;
+  user?: {
+    name: string;
+    email: string;
+    id: string;
+  };
+}
+
 export function NotionTest() {
-  const [testResult, setTestResult] = useState<any>(null);
+  const [testResult, setTestResult] = useState<TestResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

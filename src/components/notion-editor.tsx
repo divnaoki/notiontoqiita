@@ -9,29 +9,34 @@ import { useState } from "react";
 import { NotionPreview } from "@/components/notion-preview";
 import { TagSelector } from "@/components/tag-selector";
 
-interface NotionContent {
+interface NotionPage {
   title: string;
-  content: any[];
+  content: NotionBlock[];
+}
+
+interface NotionBlock {
+  type: string;
+  [key: string]: unknown;
 }
 
 export function NotionEditor() {
-  const [notionUrl, setNotionUrl] = useState("");
+  const [url, setUrl] = useState("");
+  const [page, setPage] = useState<NotionPage | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [notionContent, setNotionContent] = useState<NotionContent | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      console.log("Sending request with URL:", notionUrl);
+      console.log("Sending request with URL:", url);
       const response = await fetch("/api/notion", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ url: notionUrl }),
+        body: JSON.stringify({ url: url }),
       });
 
       const data = await response.json();
@@ -41,7 +46,7 @@ export function NotionEditor() {
         throw new Error(data.details || data.error || "Failed to fetch Notion content");
       }
 
-      setNotionContent(data);
+      setPage(data);
     } catch (err) {
       console.error("Error:", err);
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -67,8 +72,8 @@ export function NotionEditor() {
             <div className="flex space-x-2">
               <Input
                 placeholder="https://notion.so/..."
-                value={notionUrl}
-                onChange={(e) => setNotionUrl(e.target.value)}
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
               />
               <Button onClick={handleSubmit} disabled={isLoading}>
                 {isLoading ? (
@@ -89,11 +94,11 @@ export function NotionEditor() {
       </TabsContent>
 
       <TabsContent value="preview">
-        <NotionPreview content={notionContent} />
+        <NotionPreview content={page} />
       </TabsContent>
 
       <div className="flex justify-end pt-4">
-        <Button size="lg" disabled={isLoading || !notionUrl || !notionContent}>
+        <Button size="lg" disabled={isLoading || !url || !page}>
           <Send className="mr-2 h-4 w-4" />
           Post to Qiita
         </Button>

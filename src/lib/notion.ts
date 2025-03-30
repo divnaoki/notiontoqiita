@@ -8,10 +8,28 @@ export const notion = new Client({
   auth: process.env.NOTION_API_KEY,
 });
 
+interface NotionPageProperties {
+  title?: {
+    title: Array<{ plain_text: string }>;
+  };
+  Name?: {
+    title: Array<{ plain_text: string }>;
+  };
+  Tags?: {
+    multi_select: Array<{ name: string }>;
+  };
+}
+
+interface NotionPage {
+  properties: NotionPageProperties;
+  last_edited_time: string;
+  created_time: string;
+}
+
 export async function getPageContent(pageId: string) {
   try {
     // ページの存在確認
-    const page = await notion.pages.retrieve({ page_id: pageId });
+    const page = await notion.pages.retrieve({ page_id: pageId }) as NotionPage;
     if (!page) {
       throw new Error("Page not found");
     }
@@ -23,20 +41,20 @@ export async function getPageContent(pageId: string) {
     });
 
     // タイトルの取得（ページのプロパティから）
-    const title = (page as any).properties?.title?.title?.[0]?.plain_text || 
-                 (page as any).properties?.Name?.title?.[0]?.plain_text || 
+    const title = page.properties?.title?.title?.[0]?.plain_text || 
+                 page.properties?.Name?.title?.[0]?.plain_text || 
                  "Untitled";
 
     // タグの取得（ページのプロパティから）
-    const tags = (page as any).properties?.Tags?.multi_select || [];
-    const tagNames = tags.map((tag: any) => tag.name);
+    const tags = page.properties?.Tags?.multi_select || [];
+    const tagNames = tags.map(tag => tag.name);
 
     return {
       title,
       tags: tagNames,
       content: blocks.results,
-      lastEditedTime: (page as any).last_edited_time,
-      createdTime: (page as any).created_time,
+      lastEditedTime: page.last_edited_time,
+      createdTime: page.created_time,
     };
   } catch (error) {
     if (error instanceof Error) {
