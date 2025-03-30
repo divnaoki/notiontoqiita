@@ -11,13 +11,20 @@ const ALLOWED_IPS = [
 ];
 
 export function middleware(request: NextRequest) {
-  // クライアントのIPアドレスを取得
-  const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0] || 
-                  request.headers.get("x-real-ip") || 
-                  "unknown";
+  // クライアントのIPアドレスを取得（複数のヘッダーをチェック）
+  const forwardedFor = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  const realIp = request.headers.get("x-real-ip")?.trim();
+  const cfConnectingIp = request.headers.get("cf-connecting-ip")?.trim();
+  const xClientIp = request.headers.get("x-client-ip")?.trim();
 
+  // 利用可能なIPアドレスを取得
+  const clientIp = forwardedFor || realIp || cfConnectingIp || xClientIp || "unknown";
+
+  // IPアドレスの形式を検証
+  const isValidIp = /^(\d{1,3}\.){3}\d{1,3}$/.test(clientIp);
+  
   // 許可されたIPアドレスからのアクセスかチェック
-  if (!ALLOWED_IPS.includes(clientIp)) {
+  if (!isValidIp || !ALLOWED_IPS.includes(clientIp)) {
     // アクセスが拒否された場合、エラーページにリダイレクト
     return NextResponse.redirect(new URL("/access-denied", request.url));
   }
