@@ -4,25 +4,19 @@ import { notion } from "@/lib/notion";
 export async function GET() {
   try {
     // インテグレーションの情報を取得
-    const response = await notion.users.me();
-    
+    const response = await notion.users.me({});
+
     return NextResponse.json({
       success: true,
-      message: "Notion integration is working",
-      user: {
-        id: response.id,
-        name: response.name,
-        email: response.email,
-        avatar_url: response.avatar_url,
-      }
+      message: "Notion APIへの接続に成功しました",
+      user: response,
     });
   } catch (error) {
-    console.error("Error testing Notion integration:", error);
+    console.error("Notion API接続エラー:", error);
     return NextResponse.json(
-      { 
+      {
         success: false,
-        error: "Failed to connect to Notion",
-        details: error instanceof Error ? error.message : "Unknown error"
+        message: "Notion APIへの接続に失敗しました",
       },
       { status: 500 }
     );
