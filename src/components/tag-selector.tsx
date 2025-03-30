@@ -11,7 +11,7 @@ interface TagSelectorProps {
 
 const popularTags = [
   "React", "JavaScript", "TypeScript", "Next.js",
-  "Programming", "Web Development", "Frontend", "Backend", "Full Stack", "DevOps", "Cloud", "AI", "Machine Learning", "Data Science", "Cybersecurity", "Blockchain", "Web3", "NFTs", "DeFi", "Game Development", "Mobile Development", "UI/UX Design", "Product Management", "Project Management", "Leadership", "Entrepreneurship", "Marketing", "Sales", "Customer Success", "Customer Support", "Customer Service", "Customer Experience", "Customer Engagement", "Customer Retention", "Customer Satisfaction", "Customer Loyalty", "Customer Advocacy", "Customer Success", "Customer Support", "Customer Service", "Customer Experience", "Customer Engagement", "Customer Retention", "Customer Satisfaction", "Customer Loyalty", "Customer Advocacy",
+  "Programming", "Web Development", "Frontend"
 ];
 
 export function TagSelector({ selectedTags, onTagsChange }: TagSelectorProps) {
