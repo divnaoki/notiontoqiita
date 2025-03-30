@@ -2,9 +2,20 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
+interface NotionRichText {
+  plain_text: string;
+}
+
+interface NotionBlockContent {
+  rich_text: NotionRichText[];
+}
+
 interface NotionBlock {
   type: string;
-  [key: string]: unknown;
+  paragraph?: NotionBlockContent;
+  heading_1?: NotionBlockContent;
+  heading_2?: NotionBlockContent;
+  heading_3?: NotionBlockContent;
 }
 
 interface NotionPage {
@@ -36,32 +47,32 @@ export function NotionPreview({ content }: NotionPreviewProps) {
       case "paragraph":
         return (
           <p className="mb-4">
-            {(block as any).paragraph.rich_text
-              .map((text: { plain_text: string }) => text.plain_text)
+            {block.paragraph?.rich_text
+              .map((text) => text.plain_text)
               .join("")}
           </p>
         );
       case "heading_1":
         return (
           <h1 className="text-3xl font-bold mb-4">
-            {(block as any).heading_1.rich_text
-              .map((text: { plain_text: string }) => text.plain_text)
+            {block.heading_1?.rich_text
+              .map((text) => text.plain_text)
               .join("")}
           </h1>
         );
       case "heading_2":
         return (
           <h2 className="text-2xl font-bold mb-4">
-            {(block as any).heading_2.rich_text
-              .map((text: { plain_text: string }) => text.plain_text)
+            {block.heading_2?.rich_text
+              .map((text) => text.plain_text)
               .join("")}
           </h2>
         );
       case "heading_3":
         return (
           <h3 className="text-xl font-bold mb-4">
-            {(block as any).heading_3.rich_text
-              .map((text: { plain_text: string }) => text.plain_text)
+            {block.heading_3?.rich_text
+              .map((text) => text.plain_text)
               .join("")}
           </h3>
         );
