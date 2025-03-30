@@ -5,7 +5,7 @@ import type { NextRequest } from "next/server";
 const ALLOWED_IPS = [
   "127.0.0.1", // localhost
   "::1",       // localhost (IPv6)
-  "193.186.4.152",
+  "106.72.135.160",
   // ここに自宅のIPアドレスを追加してください
   // 例: "192.168.1.100"
 ];
