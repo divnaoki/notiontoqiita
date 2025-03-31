@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// 許可するIPアドレスのリスト
+// 許可するIPアドレスのリスト（環境変数から取得）
 const ALLOWED_IPS = [
   "127.0.0.1", // localhost
   "::1",       // localhost (IPv6)
-  "106.72.135.160",
+  ...(process.env.ALLOWED_IPS?.split(",") || []),
   // ここに自宅のIPアドレスを追加してください
   // 例: "192.168.1.100"
 ];
