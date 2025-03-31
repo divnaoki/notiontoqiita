@@ -1,6 +1,12 @@
+"use client";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useSearchParams } from "next/navigation";
 
 export default function AccessDenied() {
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from") || "不明なページ";
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <Card className="w-full max-w-md">
@@ -11,6 +17,9 @@ export default function AccessDenied() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          <p className="text-gray-600">
+            アクセスしようとしたページ: <span className="font-semibold">{from}</span>
+          </p>
           <p className="text-gray-600">
             このアプリケーションは特定のIPアドレスからのアクセスのみを許可しています。
             アクセスが拒否された場合、以下の理由が考えられます：

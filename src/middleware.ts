@@ -11,6 +11,11 @@ const ALLOWED_IPS = [
 ];
 
 export function middleware(request: NextRequest) {
+  // アクセス拒否ページへのアクセスは常に許可
+  if (request.nextUrl.pathname === "/access-denied") {
+    return NextResponse.next();
+  }
+
   // クライアントのIPアドレスを取得（複数のヘッダーをチェック）
   const forwardedFor = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
   const realIp = request.headers.get("x-real-ip")?.trim();
@@ -26,7 +31,9 @@ export function middleware(request: NextRequest) {
   // 許可されたIPアドレスからのアクセスかチェック
   if (!isValidIp || !ALLOWED_IPS.includes(clientIp)) {
     // アクセスが拒否された場合、エラーページにリダイレクト
-    return NextResponse.redirect(new URL("/access-denied", request.url));
+    const url = new URL("/access-denied", request.url);
+    url.searchParams.set("from", request.nextUrl.pathname);
+    return NextResponse.redirect(url);
   }
 
   return NextResponse.next();
